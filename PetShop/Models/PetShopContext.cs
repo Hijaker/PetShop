@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,12 @@ namespace PetShop.Models
         protected override void OnConfiguring(DbContextOptionsBuilder
        optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=tcp:mycloudserver1.database.windows.net,1433;Initial Catalog=MyExcercises;Persist Security Info=False;User ID=hijaker;Password=CONFIGURE_LOCALLY;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
+                    Environment.GetEnvironmentVariable("PETSHOP_CONNECTION_STRING")
+                    ?? throw new InvalidOperationException("Set PETSHOP_CONNECTION_STRING before starting the application."));
+            }
         }
     }
 
